@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Task I";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Task 1 (Rencana Produksi)</h1>
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2>Rencana Produksi Asep</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Senin</th>
+                        <th scope="col">Selasa</th>
+                        <th scope="col">Rabu</th>
+                        <th scope="col">Kamis</th>
+                        <th scope="col">Jumat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td >
+                            <input class="text-center" type="number" id="plansenin" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planselasa" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planrabu" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="plankamis" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planjumat" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto mt-5">
+        <button class="btn btn-lg btn-primary" type="button" id="ProcessData">Efisiensikan Rencana Produksi</button>
+    </div>
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2>Rencana Produksi (Diefisiensikan)</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Senin</th>
+                        <th scope="col">Selasa</th>
+                        <th scope="col">Rabu</th>
+                        <th scope="col">Kamis</th>
+                        <th scope="col">Jumat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input class="text-center" type="number" id="effisiensenin" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienselasa" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienrabu" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienkamis" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienjumat" readonly />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#ProcessData').on('click', function () {
+                SentData();
+            })
+
+            function SentData() {
+                var data1 = $('#plansenin').val()
+                var data2 = $('#planselasa').val()
+                var data3 = $('#planrabu').val()
+                var data4 = $('#plankamis').val()
+                var data5 = $('#planjumat').val()
+
+                // Validasi data
+                if (!data1 || !data2 || !data3 || !data4 || !data5) {
+                    alert("Semua kolom harus diisi!");
+                    return;
+                }
+
+                FormData = [
+                    data1, data2, data3, data4, data5
+                ]
+
+                $.ajax({
+                    url: '/Home/RencanaProduksi',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(FormData),
+                    success: function (response) {
+                        var newData = response.data;
+                        
+                        $('#effisiensenin').val(newData[0]);
+                        $('#effisienselasa').val(newData[1]);
+                        $('#effisienrabu').val(newData[2]);
+                        $('#effisienkamis').val(newData[3]);
+                        $('#effisienjumat').val(newData[4]);
+                        console.log(response)
+                        console.log(newData)
+                    },
+                    error: function (xhr) {
+                        console.error("Error:", xhr.status, xhr.statusText);
+                    }
+                })
+            }
+        })
+    </script>
+}
+    

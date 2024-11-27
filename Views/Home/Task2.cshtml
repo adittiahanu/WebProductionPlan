@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "Task II";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Task 2 (Rencana Produksi)</h1>
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2>Rencana Produksi Asep</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Senin</th>
+                        <th>Selasa</th>
+                        <th>Rabu</th>
+                        <th>Kamis</th>
+                        <th>Jumat</th>
+                        <th>Sabtu</th>
+                        <th>Minggu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input class="text-center" type="number" id="plansenin" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planselasa" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planrabu" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="plankamis" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planjumat" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="plansabtu" />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="planminggu" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto mt-5">
+        <button class="btn btn-lg btn-primary" type="button" id="ProcessData">Efisiensikan Rencana Produksi</button>
+    </div>
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2>Rencana Produksi (Diefisiensikan)</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Senin</th>
+                        <th>Selasa</th>
+                        <th>Rabu</th>
+                        <th>Kamis</th>
+                        <th>Jumat</th>
+                        <th>Sabtu</th>
+                        <th>Minggu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input class="text-center" type="number" id="effisiensenin" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienselasa" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienrabu" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienkamis" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienjumat" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisiensabtu" readonly />
+                        </td>
+                        <td>
+                            <input class="text-center" type="number" id="effisienminggu" readonly />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#ProcessData').on('click', function () {
+                SentData();
+            })
+
+            function SentData() {
+                var data1 = $('#plansenin').val()
+                var data2 = $('#planselasa').val()
+                var data3 = $('#planrabu').val()
+                var data4 = $('#plankamis').val()
+                var data5 = $('#planjumat').val()
+                var data6 = $('#plansabtu').val()
+                var data7 = $('#planminggu').val()
+                
+
+                // Validasi data
+                if (!data1 || !data2 || !data3 || !data4 || !data5 || !data6 || !data7) {
+                    alert("Semua kolom harus diisi!");
+                    return;
+                }
+
+                FormData = [
+                    data1, data2, data3, data4, data5, data6, data7
+
+                ]
+
+                $.ajax({
+                    url: '/Home/RencanaProduksiTask2',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(FormData),
+                    success: function (response) {
+                        var newData = response.data;
+
+                        $('#effisiensenin').val(newData[0]);
+                        $('#effisienselasa').val(newData[1]);
+                        $('#effisienrabu').val(newData[2]);
+                        $('#effisienkamis').val(newData[3]);
+                        $('#effisienjumat').val(newData[4]);
+                        $('#effisiensabtu').val(newData[5]);
+                        $('#effisienminggu').val(newData[6]);
+                        console.log(response)
+                        console.log(newData)
+                    },
+                    error: function (xhr) {
+                        console.error("Error:", xhr.status, xhr.statusText);
+                    }
+                })
+            }
+        })
+    </script>
+}
